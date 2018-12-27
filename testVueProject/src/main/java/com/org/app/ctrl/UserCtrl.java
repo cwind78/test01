@@ -3,9 +3,12 @@ package com.org.app.ctrl;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,8 +45,15 @@ public class UserCtrl {
 		User user = new User();
 		user.setId(id);
 		user.setPwd(pwd);
-	
-		return dao.loginOk(user);
+		
+		List<User> list = dao.loginOk(user);
+		if (list != null && list.size() > 0) {
+			HttpSession session = request.getSession(true);
+			session.setAttribute("ID", user.getId());
+			session.setAttribute("NAME", list.get(0).getName());
+			session.setMaxInactiveInterval(60*120);
+		}
+		return list;
 	}
 	
 	@GetMapping("/duple_id_check")
@@ -60,6 +70,25 @@ public class UserCtrl {
 	public List<Result> signOnNew(@RequestBody User user, HttpServletRequest request) throws Exception {
 		Result result = new Result();
 		result.setResult(String.valueOf(dao.signOnNew(user)));
+		result.setMessage(result.getResult().equals("1")?"success":"error");
+		List<Result> list = new ArrayList<Result>();
+		list.add(result);
+		return list;
+	}
+	
+	@GetMapping("/forgot_id/{name}")
+	@ResponseBody
+	public List<User> getForgotIdByName(@PathVariable("name") String name, HttpServletRequest request) throws Exception {
+		User user = new User();
+		user.setName(name);
+		return dao.getForgotIdByName(user);
+	}
+	
+	@PostMapping("/forgot_password")
+	@ResponseBody
+	public List<Result> initPassword(@RequestBody User user, HttpServletRequest request) throws Exception {
+		Result result = new Result();
+		result.setResult(String.valueOf(dao.initPassword(user)));
 		result.setMessage(result.getResult().equals("1")?"success":"error");
 		List<Result> list = new ArrayList<Result>();
 		list.add(result);

@@ -13,22 +13,34 @@ $(function() {
 			return false;
 		}
 		
-		var data = getData("/duple_id_check", {id: id.val()}, "")[0];
+		var data = getData("/forgot_id/"+name.val(), null, "")[0];
+		console.log(data);
     	if (data == undefined || data == null || data.id == "") {
-    		alert("You can use this ID");
-    		id.attr("disabled", true);
+    		alert("Your name is not registered");
     	} else {
     		if (data.id == "01") {
     			//	
     		} else {
-    			alert("You can't use this ID");
+    			$("#div_forgot_id").text(data.id);
+    			$("#btn_forgotid_forgot_password").attr("disabled", false);
     		}
     	}
 	});
 	
-	//new sign on 
-	$("#btn_signon_sign_on").bind("click", function() {
-		
+	//forgot password
+	$("#btn_forgotid_forgot_password").bind("click", function() {
+		var data = {id: $("#div_forgot_id").text()};
+		var result= setData("/forgot_password", data, "")[0];
+		if (result.result == "-1") {
+			//
+		} else {
+			if (result.result == "0") {
+				alert("Error occured during to initialize");
+			} else {
+				alert("Initialize your password!");
+				forgotIdClose();
+			}
+		}
 	});
 	
 	//div close
@@ -51,7 +63,7 @@ function forgotIdClose() {
 		</li>
 		<li>
 			<button id="btn_forgotid_look_for">Confirm</button>
-			<button id="btn_forgotid_close" disabled="disabled">Forgot password</button>
+			<button id="btn_forgotid_forgot_password" disabled="disabled">Forgot password</button>
 			<button id="btn_forgotid_close">Close</button>
 		</li>
 	</ul>

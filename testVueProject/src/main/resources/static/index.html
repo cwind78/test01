@@ -36,7 +36,7 @@ $(function() {
 	//forgot id/password
 	$("button:eq(2)").bind("click", function() {
 		var div = $("<div class=\"custom_pop\"></div>");
-		div.css({"top":"0", "left":"0", "width":"300", "height":"400", "border":"1px solid black", "position":"absolute", "background-color":"white"});
+		div.css({"top":"0", "left":"0", "width":"300", "height":"200", "border":"1px solid black", "position":"absolute", "background-color":"white"});
 		loadPage("/forgot_id", null, "", $("body"), div);
 	});
 })
@@ -54,7 +54,7 @@ function login() {
 	if (data == undefined || data == null || data.id == "") {
 		alert("Inputed wrong id or password. check your account");
 	} else {
-		alert("login success");
+		location.href = "/main";
 	}
 }
 </script>

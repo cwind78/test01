@@ -30,4 +30,16 @@
     	insert into user (id, pwd, name) 
     	values (#{id}, #{pwd}, #{name})
     </insert>
+    
+    <select id="getForgotIdByName" parameterType="com.org.app.vo.User" resultType="com.org.app.vo.User">
+        select id
+          from user
+         where name = #{name}
+    </select>
+    
+    <update id="initPassword" parameterType="com.org.app.vo.User">
+    	update user
+    	   set pwd = '1234qwer!@#$'
+    	 where id = #{id}
+    </update>
  </mapper>

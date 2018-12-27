@@ -18,7 +18,7 @@ public class AopConfig {
 		HttpSession session = null;
 		MethodSignature signature = (MethodSignature)jp.getSignature();
 		String method = signature.getMethod().getName();
-		String[] exceptMethodArray = {"login", "loginOk", "signOn", "dupleIdCheck", "signOnNew", "forgotId"};
+		String[] exceptMethodArray = {"login", "loginOk", "signOn", "dupleIdCheck", "signOnNew", "forgotId", "getForgotIdByName", "initPassword"};
 		
 		System.out.println("method="+method);
 		System.out.println("indedOf="+Arrays.asList(exceptMethodArray).indexOf(method));
@@ -29,10 +29,12 @@ public class AopConfig {
 				if (obj instanceof HttpServletRequest) {
 					req = (HttpServletRequest)obj;
 					session = req.getSession();
+					System.out.println(session.getAttribute("NAME") != null && !session.getAttribute("NAME").equals(""));
 					if (session.getAttribute("NAME") != null && !session.getAttribute("NAME").equals("")) {
 						return jp.proceed();
 					} else {
 						//loop
+						return "/login";
 					}
 				}
 			}
@@ -40,7 +42,8 @@ public class AopConfig {
 			return jp.proceed();
 		}
 		
-		return null;//"/main/login";
+		//return null;//"/main/login";
+		return "/login";
     }
 	
 	/*@Around("within(@org.springframework.stereotype.Service *)")

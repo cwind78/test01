@@ -12,9 +12,12 @@ function loadPage(url, data, err_msg, target, parent) {
 	    //,beforeSend: function(jqXHR) {}, // 서버 요청 전 호출 되는 함수 return false; 일 경우 요청 중단
 	    ,success: function(responseData) {
 	    	ret = responseData;
-	    	console.log(ret);
-	    	parent.html(ret);
-	    	target.append(parent);
+	    	if (parent != null) {
+		    	parent.html(ret);
+		    	target.append(parent);
+	    	} else {
+	    		target.html(ret);
+	    	}
 	    } // 요청 완료 시
 	    ,error: function(jqXHR) {
 	    	err_msg = (blank_check(err_msg)?err_msg:"Error occured during to get page");
@@ -36,7 +39,6 @@ function getData(url, data, err_msg) {
 	    //,beforeSend: function(jqXHR) {}, // 서버 요청 전 호출 되는 함수 return false; 일 경우 요청 중단
 	    ,success: function(responseData) {
 	    	ret = responseData;
-	    	console.log(ret);
 	    } // 요청 완료 시
 	    ,error: function(jqXHR) {
 	    	err_msg = (blank_check(err_msg)?err_msg:"Error occured during to get data");
@@ -62,7 +64,6 @@ function setData(url, data, err_msg) {
 	    //,beforeSend: function(jqXHR) {}, // 서버 요청 전 호출 되는 함수 return false; 일 경우 요청 중단
 	    ,success: function(responseData) {
 	    	ret = responseData;
-	    	console.log(ret);
 	    } // 요청 완료 시
 	    ,error: function(jqXHR) {
 	    	err_msg = (blank_check(err_msg)?err_msg:"Error occured during to set data");

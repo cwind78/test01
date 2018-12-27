@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.org.app.mapper.MenuDao">
+    <select id="getRootMenu" parameterType="com.org.app.vo.Menu" resultType="com.org.app.vo.Menu">
+    	select id
+    	       , name
+    	       , url
+    	       , ifnull(parent, 0) parent
+    	       , lv
+    	       , sort
+    	       , pop_yn
+    	  from menu
+    	 where 1 = 1
+    	   and use_yn = 'Y'
+    	 order by lv, parent, sort
+    </select>
+</mapper>

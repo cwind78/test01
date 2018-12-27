@@ -7,4 +7,6 @@ public interface UserDao {
 	public List<User> loginOk(User user) throws Exception;
 	public List<User> dupleIdCheck(User user) throws Exception;
 	public Integer signOnNew(User user) throws Exception;
+	public List<User> getForgotIdByName(User user) throws Exception;
+	public Integer initPassword(User user) throws Exception;
 }

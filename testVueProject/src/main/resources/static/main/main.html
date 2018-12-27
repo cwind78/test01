@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script
+  src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+  crossorigin="anonymous"></script>
+<script src="/asset/js/common.js"></script>
+<style>
+.top {
+	width: 100%;
+	height: 50px;
+	background-color: yellow;
+	border: 1px solid red;
+	text-align: center;
+}
+
+.body {
+	width: 100%;
+	height: 90%;
+}
+
+.float_menu {
+	height: 100%;
+	width: 200px;
+	background-color: coral;
+}
+
+.top li {
+	float: left;
+	list-style: none;
+}
+
+.float_menu li {
+	list-style: none;
+}
+</style>
+<script>
+var topM = [];
+var subM = [];
+var menu = [];
+var board_id = null;
+
+$(function() {
+	getMenuTree();
+})
+
+function getMenuTree() {
+	var data = getData("/menu_tree", null, "");
+	if (data == undefined || data == null || data.length == 0) {
+		alert("You don't have permission");
+	} else {
+		$.each(data, function(key, value) {
+			if (value.parent == "0") {
+				topM.push(value);
+			} else if (value.parent == "1") {
+				subM.push(value);
+			} else {
+				menu.push(value);
+			}
+		});
+		
+		makeTopTree(topM);
+	}
+}
+
+function makeTopTree(data) {
+	var html_ = "";
+	$.each(data, function(key, value) {
+		html_ += "<li id=\""+value.id+"\">"+value.name+"</li>";
+	});
+	
+	$(".top ul")
+		.html(html_)
+		.find("li").bind("click", function() {
+			$(".float_menu").show();
+			makeSubMenu($(this).attr("id"));
+		});
+}
+
+function makeSubMenu(id) {
+	var html_ = "";
+
+	$.each(subM, function(key, value) {
+		if (value.parent == id) {
+			html_ += "<li id=\""+value.id+"\">"+value.name+"</li>";
+		}
+	});
+	
+	$(".float_menu ul")
+		.html(html_)
+		.find("li").bind("click", function() {
+			$(".active-menu").remove();
+			makeMenu($(this).attr("id"), $(this));
+		});
+}
+
+function makeMenu(id, target) {
+	var html_ = "";
+
+	$.each(menu, function(key, value) {
+		if (value.parent == id) {
+			html_ += "<li data=\""+(JSON.stringify(value)).replace(/\"/gi, "'")+"\">"+value.name+"</li>";
+		}
+	});
+	
+	target
+		.append("<ul class=\"active-menu\">"+html_+"</ul>")
+		.find("li").bind("click", function() {
+			var data = JSON.parse($(this).attr("data").replace(/'/gi, "\""));
+			if (data.url == null) {
+				alert("This menu is uncut menu");
+				return false;	
+			}
+			
+			if (data.pop_yn == "Y") {
+				$(".custom_pop").remove();
+				
+				var div = $("<div class=\"custom_pop\"></div>");
+				div.css({"top":"0", "left":"0", "width":"90%", "height":"90%", "border":"1px solid black", "position":"absolute", "background-color":"white"});
+				loadPage(data.url, null, "", $(".body"), div);
+			} else {
+				loadPage(data.url, null, "", $(".body"), null);
+			}
+			
+			$(".float_menu").hide();
+		});
+}
+</script>
+</head>
+<body>
+<div class="top">
+	<ul>
+		
+	</ul>
+</div>
+<div class="body">
+
+</div>
+<div class="float_menu">
+	<ul>
+	
+	</ul>
+</div>
+</body>
+</html>
