@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+$(function() {
+	//forgot id
+	$("#btn_forgotid_look_for").bind("click", function() {
+		var name = $("input[name=txt_forgotid_name]");
+		if (!blank_check(name.val())) {
+			alert("Retry it after input your name");
+			return false;
+		}
+		
+		var data = getData("/duple_id_check", {id: id.val()}, "")[0];
+    	if (data == undefined || data == null || data.id == "") {
+    		alert("You can use this ID");
+    		id.attr("disabled", true);
+    	} else {
+    		if (data.id == "01") {
+    			//	
+    		} else {
+    			alert("You can't use this ID");
+    		}
+    	}
+	});
+	
+	//new sign on 
+	$("#btn_signon_sign_on").bind("click", function() {
+		
+	});
+	
+	//div close
+	$("#btn_forgotid_close").bind("click", function() {
+		forgotIdClose();
+	});
+})
+
+function forgotIdClose() {
+	$("#btn_forgotid_close").closest(".custom_pop").remove();
+}
+</script>
+</head>
+<body>
+<div>
+	<ul>
+		<li>
+			<label>name</label>
+			<input type="text" name="txt_forgotid_name" />
+		</li>
+		<li>
+			<button id="btn_forgotid_look_for">Confirm</button>
+			<button id="btn_forgotid_close" disabled="disabled">Forgot password</button>
+			<button id="btn_forgotid_close">Close</button>
+		</li>
+	</ul>
+	<div id="div_forgot_id">
+	</div>
+</div>
+</body>
+</html>

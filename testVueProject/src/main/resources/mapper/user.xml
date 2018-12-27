@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.org.app.mapper.UserDao">
+    <select id="loginOk" parameterType="com.org.app.vo.User" resultType="com.org.app.vo.User">
+        select
+        	id, name, pwd
+        from
+        	user
+        where
+        	1 = 1
+	        <if test="id != null and id != ''">
+    	    	and id = #{id}
+        	</if>
+        	<if test="pwd != null and pwd != ''">
+    	    	and pwd = #{pwd}
+        	</if>
+        	<if test="name != null and name != ''">
+    	    	and id like concat('%',#{name},'%')
+        	</if>
+    </select>
+    
+    <select id="dupleIdCheck" parameterType="com.org.app.vo.User" resultType="com.org.app.vo.User">
+        select id
+          from user
+         where id = #{id}
+    </select>
+    
+    <insert id="signOnNew" parameterType="com.org.app.vo.User">
+    	insert into user (id, pwd, name) 
+    	values (#{id}, #{pwd}, #{name})
+    </insert>
+ </mapper>

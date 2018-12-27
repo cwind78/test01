@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+$(function() {
+	//아이디 중복 체크
+	$("#btn_check_duple_id").bind("click", function() {
+		var id = $("input[name=txt_signon_id]");
+		if (!blank_check(id.val())) {
+			alert("Retry it after input your id");
+			return false;
+		}
+		
+		var data = getData("/duple_id_check", {id: id.val()}, "")[0];
+    	if (data == undefined || data == null || data.id == "") {
+    		alert("You can use this ID");
+    		id.attr("disabled", true);
+    	} else {
+    		if (data.id == "01") {
+    			//	
+    		} else {
+    			alert("You can't use this ID");
+    		}
+    	}
+	});
+	
+	//new sign on 
+	$("#btn_signon_sign_on").bind("click", function() {
+		var id = $("input[name=txt_signon_id]");
+		var pwd = $("input[name=txt_signon_password]");
+		var pwd_re = $("input[name=txt_signon_password_re]");
+		var name = $("input[name=txt_signon_name]");
+		
+		if (!blank_check(id.val())) {
+			alert("Retry it after input your id");
+			id.focus();
+			return false;
+		}
+		
+		if (!id.attr("disabled")) {
+			alert("Retry it after check duple id");
+			id.focus();
+			return false;
+		}
+		
+		if (!blank_check(pwd.val())) {
+			alert("Retry it after input your password");
+			pwd.focus();
+			return false;
+		}
+		
+		if (!blank_check(pwd_re.val())) {
+			alert("Retry it after input your password(Confirm)");
+			pwd_re.focus();
+			return false;
+		}
+		
+		if (pwd.val() != pwd_re.val()) {
+			alert("Different your password and password(Confirm)");
+			pwd_re.focus();
+			return false;
+		}
+		
+		if (!blank_check(name.val())) {
+			alert("Retry it after input your name");
+			name.focus();
+			return false;
+		}
+		
+		var data = {
+			id: id.val(),
+			pwd: pwd.val(),
+			name: name.val()
+		};
+		
+		var result= setData("/sign_on_new", data, "")[0];
+		console.log(result);
+		if (result.result == "-1") {
+			//
+		} else {
+			if (result.result == "0") {
+				alert("Error occured during to sign on");
+			} else {
+				alert("Created new account!");
+				$("input[name=txt_id]").val(id.val());
+				$("input[name=txt_password]").val(pwd.val());
+				login();
+				signOnClose();
+			}
+		}
+	});
+	
+	//div close
+	$("#btn_signon_close").bind("click", function() {
+		signOnClose();
+	});
+})
+
+function signOnClose() {
+	$("#btn_signon_close").closest(".custom_pop").remove();
+}
+</script>
+</head>
+<body>
+<div>
+	<ul>
+		<li>
+			<lable>ID</lable>
+			<input type="text" name="txt_signon_id" />
+			<button id="btn_check_duple_id">Duple ID Check</button>
+		</li>
+		<li>
+			<lable>Password</lable>
+			<input type="text" name="txt_signon_password" />
+		</li>
+		<li>
+			<lable>Password(Confirm)</lable>
+			<input type="text" name="txt_signon_password_re" />
+		</li>
+		<li>
+			<lable>Name</lable>
+			<input type="text" name="txt_signon_name" />
+		</li>
+		<li>
+			<button id="btn_signon_sign_on">Sign On</button>
+			<button id="btn_signon_close">Close</button>
+		</li>
+	</ul>
+</div>
+</body>
+</html>

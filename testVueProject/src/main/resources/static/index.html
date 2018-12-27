@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script
+  src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+  crossorigin="anonymous"></script>
+<script src="/asset/js/common.js"></script>
+
+<style>
+li {
+	list-style:none;
+}
+</style>
+
+<script>
+$(function() {
+	//login
+	$("button:first").bind("click", function() {
+		login();
+	});
+	
+	//sign on
+	$("button:eq(1)").bind("click", function() {
+		var div = $("<div class=\"custom_pop\"></div>");
+		div.css({"top":"0", "left":"0", "width":"300", "height":"400", "border":"1px solid black", "position":"absolute", "background-color":"white"});
+		loadPage("/sign_on", null, "", $("body"), div);
+	});
+	
+	//forgot id/password
+	$("button:eq(2)").bind("click", function() {
+		var div = $("<div class=\"custom_pop\"></div>");
+		div.css({"top":"0", "left":"0", "width":"300", "height":"400", "border":"1px solid black", "position":"absolute", "background-color":"white"});
+		loadPage("/forgot_id", null, "", $("body"), div);
+	});
+})
+
+function login() {
+	var id = $("input[name=txt_id]");
+	var pass = $("input[name=txt_password]");
+	
+	if (!id.val()||!pass.val()) {
+		alert("Check your id or password");
+		return false;
+	}
+	
+	var data = getData("/loginOk", {id: id.val(), pwd: pass.val()}, "")[0];
+	if (data == undefined || data == null || data.id == "") {
+		alert("Inputed wrong id or password. check your account");
+	} else {
+		alert("login success");
+	}
+}
+</script>
+</head>
+<body>
+<div>
+<ul>
+	<li><label>ID</label><input type="text" name="txt_id" /></li>
+	<li><label>Password</label><input type="text" name="txt_password" /></li>
+	<li><button>Login</button></li>
+	<li>
+		<button>Sign On</button>
+		<button>Forgot ID/Password</button>
+	</li>
+</ul>
+</div>
+
+
+</body>
+</html>
