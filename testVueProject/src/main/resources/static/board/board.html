@@ -1,10 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="utf-8">
 <title>Insert title here</title>
+<style>
+.selected_page {
+	background-color: black;
+	color: white;
+}
+</style>
+<script>
+var board_data = [];
+var board_page = 1;
+var write_mode = "0"; //0:new, 1:edit, 2:reply
+var id = null;
+
+$(function() {
+	//board_id로 글 읽어오고 page처리 하기
+	if (board_id == undefined || board_id == null || board_id == "") {
+		alert("You have not permission.");
+	} else {
+		getBoardDataList(board_id);
+	}
+})
+
+function getBoardDataList(board_id)  {
+	board_data = getData("/board/list/"+board_id, null, "");
+	console.log(board_data);
+	if (board_data != undefined && board_data != null && board_data.length > 0) {
+		makeBoardPageHtml();
+	}
+}
+
+function makeBoardPageHtml() {
+	var _html = "";
+	var total_count = board_data.length;
+	var total_page = Math.ceil(board_data.length/10);
+	var start_page = Math.ceil(board_page/10)*10+1;
+	var end_page = start_page+9;
+	end_page = (end_page>total_page?total_page:end_page);
+	
+	for (var i=start_page; i<=end_page; i++) {
+		if (i == parseInt(board_page)) {
+			_html += "<span class=\"selected_page\">"+i+"</span>";
+		} else {
+			_html += "<span>"+i+"</span>";
+		}
+	}
+	
+	$("#page_section").html(_html);
+	$("#page_section").find("span").off("click").on("click", function() {
+		board_page = $(this).text();
+		makeBoardPageHtml();
+	});
+	
+	makeBoardListHtml();
+}
+
+function makeBoardListHtml() {
+	var _html = "";
+	var start_index = board_page-1*10;
+	var end_index = board_page-1*10+9;
+	end_index = (end_index>board_data.length-1?board_date.length-1:end_index);
+	
+	if (board_data != undefined && board_data != null && board_data.length > 0) {
+		for (var i=start_index; i<=end_index; i++) {
+			_html += "<tr>";
+			_html += "<td>"+board_data[i].id+"</td>";
+			_html += "<td>"+board_data[i].title+"</td>";
+			_html += "<td>"+board_data[i].insert_id+"</td>";
+			_html += "<td>"+board_data[i].insert_dt+"</td>";
+			_html += "</tr>";
+		}
+		
+		$("#board_list").html(_html);
+		$("#board_list").find("tr").off("click").on("click", function() {
+			board_id = $(this).find("td:first").text();
+		});
+	}
+}
+</script>
 </head>
 <body>
-board
+<div id="board_name"></div>
+<div>
+	<div>
+		<table>
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>Title</th>
+					<th>Writer</th>
+					<th>Registed time</th>
+				</tr>
+			</thead>
+			<tbody id="board_list">
+			</tbody>
+		</table>
+		<div id="page_section"></div>
+		<div>
+			<button id="board_new">New</button>
+		</div>
+	</div>
+</div>
 </body>
 </html>

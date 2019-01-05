@@ -119,6 +119,8 @@ function makeMenu(id, target) {
 				return false;	
 			}
 			
+			board_id = data.id;
+			
 			if (data.pop_yn == "Y") {
 				$(".custom_pop").remove();
 				
@@ -126,6 +128,7 @@ function makeMenu(id, target) {
 				div.css({"top":"0", "left":"0", "width":"90%", "height":"90%", "border":"1px solid black", "position":"absolute", "background-color":"white"});
 				loadPage(data.url, null, "", $(".body"), div);
 			} else {
+				//console.log(data.url);
 				loadPage(data.url, null, "", $(".body"), null);
 			}
 			

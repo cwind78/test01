@@ -12,6 +12,7 @@ function loadPage(url, data, err_msg, target, parent) {
 	    //,beforeSend: function(jqXHR) {}, // 서버 요청 전 호출 되는 함수 return false; 일 경우 요청 중단
 	    ,success: function(responseData) {
 	    	ret = responseData;
+	    	console.log(ret);
 	    	if (parent != null) {
 		    	parent.html(ret);
 		    	target.append(parent);

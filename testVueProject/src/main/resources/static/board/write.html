@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+.hidden {
+	display:none;
+}
+</style>
+<script>
+$(function() {
+	if (write_mode == "2") {
+		$("#btn_boardWrite_reply").show();	
+	} else {
+		$("#btn_boardWrite_new").show();
+	}
+	
+	//답글
+	$("#btn_boardWrite_reply").bind("click", function() {
+		var data = {
+			id: id
+			, title: $("input[name=txt_boardWrite_title]").val()
+			, contents: $("textarea[name=txt_boardWrite_contents]").val()
+		};
+		
+		var result = setData("/board/replay", data, "")[0];
+		console.log(result);
+		if (parseInt(result.result) > 0) {
+			alert("Successed to save!");
+		} else {
+			alert("Error occured during to save");
+		}
+	})
+	
+	//답글
+	$("#btn_boardWrite_new").bind("click", function() {
+		var data = {
+			id: id
+			, title: $("input[name=txt_boardWrite_title]").val()
+			, contents: $("textarea[name=txt_boardWrite_contents]").val()
+		};
+		
+		var result = setData("/board/replay", data, "")[0];
+		console.log(result);
+		if (parseInt(result.result) > 0) {
+			alert("Successed to save!");
+		} else {
+			alert("Error occured during to save");
+		}
+	})
+})
+</script>
+</head>
+<body>
+<div>
+	<div>
+		<label>Title</label>
+		<input type="text" name="txt_boardWrite_title" max-length="100" />
+	</div>
+	<div>
+		<label>Contents</label>
+		<textarea name="txt_boardWrite_contents" row="100" col="100"></textarea>
+	</div>
+	<div>
+		<button class="hidden" id="btn_boardWrite_new">Write</button>
+		<button class="hidden" id="btn_boardWrite_reply">Reply</button>
+	</div>
+</div>
+</body>
+</html>

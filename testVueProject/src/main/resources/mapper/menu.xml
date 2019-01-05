@@ -10,7 +10,7 @@
     	       , lv
     	       , sort
     	       , pop_yn
-    	  from menu
+    	  from menus
     	 where 1 = 1
     	   and use_yn = 'Y'
     	 order by lv, parent, sort

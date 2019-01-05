@@ -36,6 +36,8 @@ public class AopConfig {
 						//loop
 						return "/login";
 					}
+				} else {
+					return "/login";
 				}
 			}
 		} else {

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.org.app.mapper.BoardDao">
+    <select id="getBoardDataList" parameterType="com.org.app.vo.Board" resultType="com.org.app.vo.Board">
+    	select id
+    	       , group_id
+    	       , sort
+    	       , lv
+    	       , title
+    	       , contents
+    	       , insert_dt
+    	       , insert_id
+    	  from board
+    	 where 1 = 1
+    	   <if test="mast_id != null and mast_id != ''">
+    	   and mast_id = #{mast_id}
+    	   </if>
+    	   <if test="id != null and id != ''">
+    	   and id = #{id}
+    	   </if>
+    	 order by group_id desc, sort
+    </select>
+    
+    <!-- 새글쓰기 -->
+    <insert id="insertBoard" parameterType="com.org.app.vo.Board">
+    	insert into board (
+    		mast_id, group_id, sort, lv, title, contents, insert_id, insert_dt
+    	) values (
+    		#{mast_id}
+    		, ifnull((select max(group_id) from board), 0) + 1
+    		, 1
+    		, 1
+    		, #{title}
+    		, #{contents}
+    		, #{insert_id}
+    		, now() 
+    	)
+    </insert>
+    
+    <!-- 글 업데이트 -->
+    <update id="updateBoard" parameterType="com.org.app.vo.Board">
+    	update board
+    	   set title = #{title}
+    	       , contents = #{contents}
+    	       , update_id = #{update_id}
+    	       , update_dt = now()
+    	 where id = #{id}
+    </update>
+    
+    <!-- 답글 쓰기 전 sort 업데이트-->
+    <update id="updateSort" parameterType="com.org.app.vo.Board">
+    	update board
+    	   set sort = sort + 1
+		 <![CDATA[
+    	 where sort > #{sort}
+    	 ]]>
+    </update>
+    
+    <!-- 답글 쓰기 -->
+    <insert id="insertReply" parameterType="com.org.app.vo.Board">
+    	insert into board (
+    		mast_id, group_id, sort, lv, title, contents, insert_id, insert_dt
+    	) values (
+    		#{mast_id}
+    		, #{group_id}
+    		, #{sort}+1
+    		, #{lv}+1
+    		, #{title}
+    		, #{contents}
+    		, #{insert_id}
+    		, now() 
+    	)
+    </insert>
+    
+    <!-- 코멘트 조회 -->
+    <select id="getCommentsDataList" parameterType="com.org.app.vo.Comments" resultType="com.org.app.vo.Comments">
+    	select id
+    	       , comments
+    	       , insert_id
+    	       , insert_dt
+    	  from comments
+    	 where 1 = 1
+    	   and board_id = #{board_id}
+    	   <if test="id != null and id != ''">
+    	   and id = #{id}
+    	   </if>
+    	 order by insert_dt desc
+    </select>
+    
+    <!-- 새 코멘트 쓰기 -->
+    <insert id="insertComments" parameterType="com.org.app.vo.Comments">
+    	insert into comments (
+    		board_id, comments, insert_id, insert_dt
+    	) values (
+    		#{board_id}, #{comments}, #{insert_id}, now()
+    	)
+    </insert>
+    
+    <!-- 코멘트 업데이트 -->
+    <update id="updateComments" parameterType="com.org.app.vo.Comments">
+    	update comments
+    	   set comments = #{comments}
+    	       , update_id = #{update_id}
+    	       , update_dt = now()
+    	 where id = #{id}
+    </update>
+</mapper>
